@@ -55,7 +55,7 @@ const ListaContatti = () => {
   if (contatti)
     return (
       <div className={styles.containerTable}>
-        <h1>Lista completa dei contatti</h1>
+        <h1>Lista completa dei contatti presenti in Rubrica</h1>
         <table className={styles.tabella}>
           <tr className={styles.trTitle}>
             <th id={styles.thNome} className={styles.th}>Nome</th>
