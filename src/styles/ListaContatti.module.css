@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+.containerTable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 80px;
+    font-family: 'Montserrat';
+}
+
+.tabella {
+    border: 1px solid black;
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.tabella th {
+    border: 1px solid red;
+    padding: 10px;
+}
+
+td {
+    border: 1px solid blue;
+    padding: 10px;
+}
+
+th {
+    text-align: center;
+}
+
+.containerBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.btnAction {
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    color: white;
+    font-family: 'Montserrat';
+    border-radius: 4px;
+}
+
+#btnUpdate {
+    background-color: green;
+    transition: 0.5s;
+}
+
+#btnDelete {
+    background-color: red;
+    transition: 0.5s;
+}
+
+#btnDelete:hover {
+    background-color: rgb(161, 37, 37);
+}
+
+#btnUpdate:hover {
+    background-color: rgb(13, 189, 13);
+}
+
+#thAction {
+    width: 350px;
+}
+#thCognome {
+    width: 400px;
+}
+#thNome {
+    width: 400px;
+}

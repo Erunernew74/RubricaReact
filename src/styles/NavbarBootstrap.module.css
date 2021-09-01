@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+
+#bg {
+    background: rgb(148, 146, 146);
+    padding-left: 25px;
+    padding-right: 25px;
+    
+  }
+  .logoTitle {
+    font-size: 45px;
+    font-family: 'ROBOTO CONDENSED';
+  }
+
+  .logoImg {
+      margin-right: 15px;
+      width: 45px;
+  }
+
+  .content {
+      /* Prima lo inserisco e poi lo tolgo se uso sticky, altrimenti se uso fixed devo inserirlo */
+    margin-top: 100px;   
+    padding: 45px 25px;
+      
+  }
+
+  #navLink {
+      font-family: 'Roboto';
+      font-size: 17px;
+      text-transform: uppercase;
+      
+  }
+  #navLink:hover{
+      color: rgb(212, 154, 154);
+  }
+
+  
+
+  #linkItem {
+      color: green;
+      font-family: 'Roboto';
+      
+  }
+
+  .collapse {
+      text-align: center;
+      width: 100%;
+      
+  }
+  #nav {
+      text-align: right;
+  }
+  
+  @media  (max-width: 768px){
+    .logoTitle {
+        font-size: 35px;
+
+    }
+    #nav {
+        text-align: center;
+        
+    }
+    
+    .collapse {
+        margin-top: 8px;
+        
+    }
+    #navLink {
+        color: black;
+        font-size: 20px;
+    }
+  }
+
+  @media  (max-width: 470px){
+    .logoTitle {
+        font-size: 20px;
+    }
+    #navLink {
+        color: black;
+        font-size: 15px;
+    }
+  }

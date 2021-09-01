@@ -1,0 +1,23 @@
+.inputNumber {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin-top: 20px;
+    padding: 10px;
+}
+.btnAggiung {
+    margin: 10px;
+    width: 280px;
+    padding: 10px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+input {
+    margin: 0 10px;
+}

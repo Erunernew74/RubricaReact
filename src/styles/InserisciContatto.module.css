@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.containerInput {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    margin-bottom: 20px;
+}
+
+.containerNumber {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+#idName {
+    margin-bottom: 10px;
+}
+
+.btnAggiungiNumero {
+    width: 300px;
+    padding: 5px;
+    /* margin-left: 640px; */
+    margin-bottom: 25px;
+}
+
+.containerForm{
+    display: flex;
+    margin-top: 20px;
+}
+
+.btnInserisciContatto {
+    margin-top: 20px;
+    width: 500px;
+}
+
+input {
+    padding: 5px;
+}
+
+.containerItems {
+    display: flex;
+}
+
+.inputNumeri {
+    display: flex;
+    flex-direction: column;
+}
+.formInput {
+    margin-bottom: 15px;
+}
