@@ -15,7 +15,7 @@ const ListaContatti = () => {
 
   useEffect(() => {
     const getContatti = async () => {
-      const res = await fetch("http://localhost:3030/listaContatti");
+      const res = await fetch("http://localhost:3031/listaContatti");
 
       const data = await res.json();
       console.log(data);
@@ -30,7 +30,7 @@ const ListaContatti = () => {
   const eliminaContatto = async (nome, cognome, id) => {
     if (window.confirm(`Vuoi davvero eliminare ${nome} ${cognome}`)) {
 
-      const res = await fetch("http://localhost:3030/eliminaContatto", {
+      const res = await fetch("http://localhost:3031/eliminaContatto", {
         method: "DELETE",
         headers: {
           "Content-type": "application/json"
@@ -40,7 +40,7 @@ const ListaContatti = () => {
 
       const { status } = await res.json();
       setRisCanc(status);
-    }
+    } 
   }
 
 
@@ -62,9 +62,9 @@ const ListaContatti = () => {
             <th id={styles.thCognome} className={styles.th}>Cognome</th>
             <th id={styles.thAction}>Action</th>
           </tr>
-        {conttattiUnici.map((e, index) => {
-          return (
-            
+          {conttattiUnici.map((e, index) => {
+            return (
+
               <tr key={index}>
                 <td>{e.Nome}</td>
                 <td>{e.Cognome}</td>
@@ -73,13 +73,13 @@ const ListaContatti = () => {
                     <button onClick={() => eliminaContatto(e.Nome, e.Cognome, e.idContatto)} className={styles.btnAction} id={styles.btnDelete}>ELIMINA</button>
                     <button onClick={() => { setRisUpdate(true); setContatto(e) }} className={styles.btnAction} id={styles.btnUpdate}>AGGIORNA</button>
                   </div>
-                </td> 
+                </td>
               </tr>
             );
           })}
         </table >
       </div>
-      );
+    );
   return (
     <div>
       <h1>Nessun contatto...</h1>

@@ -6,23 +6,23 @@ import styles from "../styles/InserisciContatto.module.css";
 const InserisciContatto = () => {
   // Settaggio dell'input dinamico che sarà settato ad input-0 come valore iniziale
   let [inputs, setInputs] = useState(["input-0"]);
-  
+
   // useRef usato per 'prendere' il value degli input
   const nome = useRef("");
   const cognome = useRef("");
   // const form = useRef("");
 
-  
+
   // Fetch per l'inserimento dei valori nel database
   const [data, setData] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
     /* nome.current.value; // document.querySelector("input").value */
     const numeri = inputs.map((e) => {
-      return document.querySelector(`#${e}`).value;
+      return document.querySelector(`#${e}`).value; // documnet.querySelector("#input-0")
     });
     console.log(numeri);
-    const res = await fetch("http://localhost:3030/inserisciContatto", {
+    const res = await fetch("http://localhost:3031/inserisciContatto", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -78,7 +78,7 @@ const InserisciContatto = () => {
           </div>
           <div className={styles.inputNumeri}>
             {inputs.map((input) => (
-              <FormInput key={input} id={input} className={styles.formInput}/>
+              <FormInput key={input} id={input} className={styles.formInput} />
             ))}
           </div>
         </div>

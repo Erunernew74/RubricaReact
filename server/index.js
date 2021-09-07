@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require("cors");
 const app = express();
-const PORT = process.env.PORT || 3030;
+const PORT = process.env.PORT || 3031;
 
 
 
@@ -83,7 +83,6 @@ app.get("/listaContatti", (req, res) => {
 
 });
 
-
 app.delete("/eliminaContatto", async (req, res) => {
     connection.query(`DELETE FROM contatti WHERE id = ${req.body.id}`, (err, results, fields) => {
         if (err) {
@@ -97,6 +96,44 @@ app.delete("/eliminaContatto", async (req, res) => {
 
     return res.json({ status: true })
 })
+
+app.delete("/eliminaNumero", async (req, res) => {
+    connection.query(`DELETE FROM numeri WHERE id = ${req.body.id}`, (err, results, fields) => {
+        if (err) {
+            console.log(err)
+            return res.json({ status: false })
+        }
+
+
+    });
+
+
+    return res.json({ status: true })
+})
+
+app.post("/inserisciNumero", async (req, res) => {
+    if (req.body.id) {
+
+    }
+    else {
+        connection.query(`INSERT INTO numeri (numero, idContatto) VALUES (${req.body.num},${req.body.idContatto})`, (err, results, fields) => {
+            if (err) {
+                console.log(err)
+                return res.json({ status: false })
+            }
+
+            return res.json({ status: true })
+
+        });
+
+
+    }
+
+    return res.json({ status: true })
+})
+
+
+
 
 
 
