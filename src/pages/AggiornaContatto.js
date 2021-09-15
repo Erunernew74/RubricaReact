@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
+import FormInput from "../components/FormInput";
+import UpdateSuccess from "../components/UpdateSuccess";
 import styles from '../styles/AggiornaContatto.module.css';
+
 
 const AggiornaContatto = ({ contatto, contatti }) => {
     const [nome, setNome] = useState(contatto.Nome);
     const [cognome, setCognome] = useState(contatto.Cognome);
-
-    let [inputs, setInputs] = useState([]);
-    let [inputs2, setInputs2] = useState([]);
+    const [goToUpdate, setGoToUpdate] = useState(false);
+    const [inputs, setInputs] = useState([]);
+     const [inputsTipo, setInputsTipo] = useState([]);
+    const [inputs2, setInputs2] = useState([]);
+    const [inputs2Tipo, setInputs2Tipo] = useState([]);
 
     useEffect(() => {
         const numeriContatto = contatti.filter((e) => e.idContatto == contatto.idContatto)
@@ -16,10 +21,12 @@ const AggiornaContatto = ({ contatto, contatti }) => {
             let newInput = {
                 id: e.id,
                 class: `input-number`,
-                value: e.numero
+                classTipo:  "input-tipo",
+                value: e.numero,
+                tipo: e.tipologia
             };
             setInputs((prevInputs) => ([...prevInputs, newInput]));
-        })
+                    })
 
     }, [])
 
@@ -27,6 +34,9 @@ const AggiornaContatto = ({ contatto, contatti }) => {
     const aggiungiCampo = () => {
         let newInput = `input-${inputs2.length}`;
         setInputs2([...inputs2, newInput]);
+        newInput = `tipo-${inputs2.length}`;
+        setInputs2Tipo([...inputs2, newInput]);
+
 
     }
 
@@ -57,13 +67,13 @@ const AggiornaContatto = ({ contatto, contatti }) => {
                 body: JSON.stringify({ nome, cognome })
             });
             const { status } = await res.json()
-            console.log(status) 
+            console.log(status)
         }
 
 
         let newNumeri = [];
         inputs2.forEach((e, i) => {
-            newNumeri.push({ id: null, num: document.querySelector(`#input-${i}`).value });
+            newNumeri.push({ id: null, num: document.querySelector(`#input-${i}`).value, tipo: document.querySelector(`#tipo-${i}`).value });
         })
         inputs.forEach((e, i) => {
             Array.from(document.querySelectorAll(`.input-number`)).filter(e => e.value.trim() != "").forEach(e => {
@@ -95,8 +105,10 @@ const AggiornaContatto = ({ contatto, contatti }) => {
                 console.log(status)
             }
         })
-        console.log(newNumeri)
+        setGoToUpdate(true);
     }
+    if (goToUpdate)
+        return <UpdateSuccess />
     return (
         <>
             <h1 style={{ textAlign: 'center', marginBottom: '45px' }}>Nominativo: {nome} {cognome}</h1>
@@ -111,11 +123,12 @@ const AggiornaContatto = ({ contatto, contatti }) => {
                         return (
                             <div className={styles.divInput}>
                                 <input type="number" key={i} className={e.class} id={e.id} placeholder={e.value} />
+                                <input type="text" key={i+i} className={e.classTipo}  placeholder={e.tipo} />
                                 <button key={`key-${i}`} onClick={() => eliminaNumero(e.id)}>X</button>
                             </div>
                         )
                     })}
-                    {inputs2.map((input) => <input className={styles.numberInputs} type="number" key={input} id={input} />)}
+                    {inputs2.map((input) => <FormInput id={input}/>)}
                 </div>
 
                 <div>

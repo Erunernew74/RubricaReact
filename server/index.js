@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'rubrica'
+    database: 'rubrica' 
 })
 
 
@@ -31,6 +31,7 @@ try {
     connection.query(`CREATE TABLE Numeri(
         id int(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
         numero varchar(30),
+        tipologia varchar(20),
         idContatto int(4),
         CONSTRAINT FK_ContattoId FOREIGN KEY (idContatto)
         REFERENCES Contatti(id)
@@ -54,7 +55,7 @@ app.post("/inserisciContatto", async (req, res) => {
         } else {
             id = results.insertId
             for (let i = 0; i < req.body.numero.length; i++) {
-                connection.query(`INSERT INTO numeri (id,numero,idContatto) VALUES (NULL,'${req.body.numero[i]}','${id}')`, (err, results, fields) => {
+                connection.query(`INSERT INTO numeri (id,numero,tipologia,idContatto) VALUES (NULL,'${req.body.numero[i]}','${req.body.tipo[i]}','${id}')`, (err, results, fields) => {
                     if (err) {
                         console.log(err)
                         return res.json({ msg: "Inserimento errato!" })
@@ -113,16 +114,21 @@ app.delete("/eliminaNumero", async (req, res) => {
 
 app.post("/inserisciNumero", async (req, res) => {
     if (req.body.id) {
-
-    }
-    else {
-        connection.query(`INSERT INTO numeri (numero, idContatto) VALUES (${req.body.num},${req.body.idContatto})`, (err, results, fields) => {
+        connection.query(`UPDATE numeri SET numero="${req.body.num}" WHERE id=${req.body.id}`, (err, results, fields) => {
             if (err) {
                 console.log(err)
                 return res.json({ status: false })
             }
 
-            return res.json({ status: true })
+        });
+    }
+    else {
+        connection.query(`INSERT INTO numeri (numero,tipologia, idContatto) VALUES (${req.body.num},${req.body.tipo},${req.body.idContatto})`, (err, results, fields) => {
+            if (err) {
+                console.log(err)
+                return res.json({ status: false })
+            }
+
 
         });
 

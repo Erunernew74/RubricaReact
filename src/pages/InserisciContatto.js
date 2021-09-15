@@ -5,8 +5,8 @@ import styles from "../styles/InserisciContatto.module.css";
 
 const InserisciContatto = () => {
   // Settaggio dell'input dinamico che sarà settato ad input-0 come valore iniziale
-  let [inputs, setInputs] = useState(["input-0"]);
-
+  const [inputs, setInputs] = useState(["input-0"]);
+  const [inputsTipo, setInputsTipo] = useState(["tipo-0"]);
   // useRef usato per 'prendere' il value degli input
   const nome = useRef("");
   const cognome = useRef("");
@@ -19,8 +19,14 @@ const InserisciContatto = () => {
     e.preventDefault();
     /* nome.current.value; // document.querySelector("input").value */
     const numeri = inputs.map((e) => {
-      return document.querySelector(`#${e}`).value; // documnet.querySelector("#input-0")
+      return document.querySelector(`#${e}`).value; // document.querySelector("#input-0")
     });
+
+    // Questo è il secondo campo della tabella numeri, cioè la tabella secondaria, che si ottiene dinamicamente
+    const tipologie = inputsTipo.map((e) => {
+      return document.querySelector(`#${e}`).value; // document.querySelector("#tipo-0")
+    });
+
     console.log(numeri);
     const res = await fetch("http://localhost:3031/inserisciContatto", {
       method: "POST",
@@ -32,6 +38,7 @@ const InserisciContatto = () => {
         nome: nome.current.value,
         cognome: cognome.current.value,
         numero: numeri,
+        tipo: tipologie,
       }),
     });
 
@@ -41,6 +48,10 @@ const InserisciContatto = () => {
   const aggiungiCampo = () => {
     let newInput = `input-${inputs.length}`;
     setInputs([...inputs, newInput]);
+
+    newInput = `tipo-${inputs.length}`;
+    setInputsTipo([...inputsTipo, newInput]);
+
   };
 
   if (data) return <Output data={data} />;

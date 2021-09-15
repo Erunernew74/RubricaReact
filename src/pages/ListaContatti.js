@@ -23,7 +23,7 @@ const ListaContatti = () => {
       setContattiUnici([...new Map(data.map(item => [item["idContatto"], item])).values()])
 
     };
-    getContatti();
+    getContatti(); 
   }, []);
 
 
