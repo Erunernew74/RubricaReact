@@ -1,33 +1,17 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import FormInput from "../components/FormInput";
 import Output from "./Output";
 import styles from "../styles/InserisciContatto.module.css";
 
 const InserisciContatto = () => {
-  // Settaggio dell'input dinamico che sarà settato ad input-0 come valore iniziale
-  const [inputs, setInputs] = useState(["input-0"]);
-  const [inputsTipo, setInputsTipo] = useState(["tipo-0"]);
-  // useRef usato per 'prendere' il value degli input
-  const nome = useRef("");
-  const cognome = useRef("");
-  // const form = useRef("");
+  const [input, setInput] = useState({ nome: "", cognome: "" })
+  const [inputsNum, setInputsNum] = useState([{ num: "", tipo: "" }])
 
+  const [data, setData] = useState(false)
 
-  // Fetch per l'inserimento dei valori nel database
-  const [data, setData] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    /* nome.current.value; // document.querySelector("input").value */
-    const numeri = inputs.map((e) => {
-      return document.querySelector(`#${e}`).value; // document.querySelector("#input-0")
-    });
 
-    // Questo è il secondo campo della tabella numeri, cioè la tabella secondaria, che si ottiene dinamicamente
-    const tipologie = inputsTipo.map((e) => {
-      return document.querySelector(`#${e}`).value; // document.querySelector("#tipo-0")
-    });
-
-    console.log(numeri);
     const res = await fetch("http://localhost:3031/inserisciContatto", {
       method: "POST",
       headers: {
@@ -35,22 +19,30 @@ const InserisciContatto = () => {
       },
 
       body: JSON.stringify({
-        nome: nome.current.value,
-        cognome: cognome.current.value,
-        numero: numeri,
-        tipo: tipologie,
+        nome: input.nome,
+        cognome: input.cognome,
+        numero: inputsNum,
       }),
     });
 
     setData(await res.json());
   };
 
-  const aggiungiCampo = () => {
-    let newInput = `input-${inputs.length}`;
-    setInputs([...inputs, newInput]);
+  const handleNumChange = (e, i) => {
+    const { name, value } = e.target;
+    const newInputsNum = [...inputsNum];
+    newInputsNum[i][name] = value;
 
-    newInput = `tipo-${inputs.length}`;
-    setInputsTipo([...inputsTipo, newInput]);
+    setInputsNum(newInputsNum);
+  }
+
+  const handleNomeCognome = (e) => {
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value })
+  }
+
+  const aggiungiCampo = () => {
+    setInputsNum([...inputsNum, { num: "", tipo: "" }])
 
   };
 
@@ -63,33 +55,34 @@ const InserisciContatto = () => {
         <div className={styles.containerInput}>
           <input
             type="text"
-            name=""
+            name="nome"
             id=""
-            ref={nome}
             placeholder="Nome..."
+            value={input.nome}
             id={styles.idName}
+            onChange={handleNomeCognome}
           />
           <input
             type="text"
-            name=""
+            name="cognome"
             id=""
-            ref={cognome}
             placeholder="Cognome..."
+            value={input.cognome}
+            onChange={handleNomeCognome}
           />
         </div>
         <div className={styles.containerNumber}>
           <div className={styles.inputNumero}>
             <button
-              onClick={(e) => aggiungiCampo(e)}
+              onClick={aggiungiCampo}
               className={styles.btnAggiungiNumero}
             >
-              {" "}
               + AGGIUNGI NUMERO
             </button>
           </div>
           <div className={styles.inputNumeri}>
-            {inputs.map((input) => (
-              <FormInput key={input} id={input} className={styles.formInput} />
+            {inputsNum.map((e, i) => (
+              <FormInput key={i} e={e} i={i} handleNumChange={handleNumChange} />
             ))}
           </div>
         </div>
@@ -101,6 +94,7 @@ const InserisciContatto = () => {
       >
         INSERISCI CONTATTO
       </button>
+
     </div>
   );
 };

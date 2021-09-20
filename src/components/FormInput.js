@@ -1,15 +1,12 @@
 import React from 'react';
 import styles from '../styles/FormInput.module.css';
 
-const FormInput = ({id}) => {
+const FormInput = ({ i, e, handleNumChange }) => {
     return (
-        <>
-        <div className={styles.container}>
-            <input type="text" id={id}  placeholder="Numero..." />
-            <input type="text" name="" id={`tipo-${id.split("-")[1]}`} placeholder="Fisso o Cel"/>
+        <div>
+            <input type="text" name="num" placeholder="Numero..." value={e.num} onChange={(e) => handleNumChange(e, i)} />
+            <input type="text" name="tipo" placeholder="Fisso o Cel" value={e.tipo} onChange={(e) => handleNumChange(e, i)} />
         </div>
-            
-        </>
     )
 }
 

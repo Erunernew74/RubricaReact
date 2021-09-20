@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
 import FormInput from "../components/FormInput";
+import FormInputDelete from "../components/FormInputDelete";
 import UpdateSuccess from "../components/UpdateSuccess";
 import styles from '../styles/AggiornaContatto.module.css';
 
 
 const AggiornaContatto = ({ contatto, contatti }) => {
-    const [nome, setNome] = useState(contatto.Nome);
-    const [cognome, setCognome] = useState(contatto.Cognome);
+    const [input, setInput] = useState({ nome: contatto.Nome, cognome: contatto.Cognome })
+    const [inputsNum, setInputsNum] = useState([])
+
     const [goToUpdate, setGoToUpdate] = useState(false);
-    const [inputs, setInputs] = useState([]);
-     const [inputsTipo, setInputsTipo] = useState([]);
-    const [inputs2, setInputs2] = useState([]);
-    const [inputs2Tipo, setInputs2Tipo] = useState([]);
 
     useEffect(() => {
         const numeriContatto = contatti.filter((e) => e.idContatto == contatto.idContatto)
@@ -19,81 +17,85 @@ const AggiornaContatto = ({ contatto, contatti }) => {
         numeriContatto.forEach((e) => {
 
             let newInput = {
-                id: e.id,
-                class: `input-number`,
-                classTipo:  "input-tipo",
-                value: e.numero,
-                tipo: e.tipologia
+                num: e.numero,
+                tipo: e.tipologia,
+                id: e.id
             };
-            setInputs((prevInputs) => ([...prevInputs, newInput]));
-                    })
+            setInputsNum((prevInputs) => ([...prevInputs, newInput]));
+        })
 
     }, [])
 
+    const handleNumChange = (e, i) => {
+        const { name, value } = e.target;
+        const newInputsNum = [...inputsNum];
+        newInputsNum[i][name] = value;
+
+        setInputsNum(newInputsNum);
+    }
+
+    const handleNomeCognome = (e) => {
+        const { name, value } = e.target;
+        setInput({ ...input, [name]: value })
+    }
+
 
     const aggiungiCampo = () => {
-        let newInput = `input-${inputs2.length}`;
-        setInputs2([...inputs2, newInput]);
-        newInput = `tipo-${inputs2.length}`;
-        setInputs2Tipo([...inputs2, newInput]);
-
-
+        setInputsNum([...inputsNum, { num: "", tipo: "", id: null }])
     }
 
-    const eliminaNumero = async (id) => {
-        if (window.confirm(`Vuoi davvero eliminare il numero?`)) {
-
-            const res = await fetch("http://localhost:3031/eliminaNumero", {
-                method: "DELETE",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify({ id })
-            });
-
-            const { status } = await res.json();
-
-            setInputs(inputs.filter(e => e.id !== id))
+    const eliminaNumero = async (id, i) => {
+        if (!id) {
+            const newInputsNum = [...inputsNum];
+            newInputsNum.splice(i, 1)
+            setInputsNum(newInputsNum)
         }
+        else {
+            if (window.confirm(`Vuoi davvero eliminare il numero?`)) {
+                const res = await fetch("http://localhost:3031/eliminaNumero", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify({ id })
+                });
 
+                const { status } = await res.json();
+
+                const newInputsNum = [...inputsNum];
+                newInputsNum.splice(i, 1)
+                setInputsNum(newInputsNum)
+            }
+
+        }
     }
     const aggiornaContatto = async () => {
-        if (contatto.Nome != nome || contatto.Cognome != cognome) {
+        if (contatto.Nome != input.nome || contatto.Cognome != input.cognome) {
+            console.log("ok")
             const res = await fetch("http://localhost:3031/aggiornaContatto", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json"
                 },
-                body: JSON.stringify({ nome, cognome })
+                body: JSON.stringify({ nome: input.nome, cognome: input.cognome, id: contatto.idContatto })
             });
             const { status } = await res.json()
             console.log(status)
         }
 
 
-        let newNumeri = [];
-        inputs2.forEach((e, i) => {
-            newNumeri.push({ id: null, num: document.querySelector(`#input-${i}`).value, tipo: document.querySelector(`#tipo-${i}`).value });
-        })
-        inputs.forEach((e, i) => {
-            Array.from(document.querySelectorAll(`.input-number`)).filter(e => e.value.trim() != "").forEach(e => {
-                newNumeri.push({ id: e.id, num: e.value });
-            });
-        })
-
-        newNumeri.forEach(async (e) => {
+        inputsNum.forEach(async (e) => {
             if (e.id == null) {
                 const res = await fetch("http://localhost:3031/inserisciNumero", {
                     method: "POST",
                     headers: {
                         "Content-type": "application/json"
                     },
-                    body: JSON.stringify({ num: e.num, idContatto: contatto.idContatto })
+                    body: JSON.stringify({ num: e.num, tipo: e.tipo, idContatto: contatto.idContatto })
                 });
                 const { status } = await res.json();
                 console.log(status)
-            }
-            else {
+            } else {
                 const res = await fetch("http://localhost:3031/inserisciNumero", {
                     method: "POST",
                     headers: {
@@ -103,6 +105,8 @@ const AggiornaContatto = ({ contatto, contatti }) => {
                 });
                 const { status } = await res.json();
                 console.log(status)
+
+
             }
         })
         setGoToUpdate(true);
@@ -111,30 +115,26 @@ const AggiornaContatto = ({ contatto, contatti }) => {
         return <UpdateSuccess />
     return (
         <>
-            <h1 style={{ textAlign: 'center', marginBottom: '45px' }}>Nominativo: {nome} {cognome}</h1>
+            <h1 style={{ textAlign: 'center', marginBottom: '45px' }}>Nominativo: {input.nome} {input.cognome}</h1>
             <div className={styles.container}>
 
                 <div className={styles.inputName}>
-                    <input type="text" placeholder="Nome..." value={nome} onChange={(e) => setNome(e.target.value)} />
-                    <input type="text" placeholder="Cognome..." value={cognome} onChange={(e) => setNome(e.target.value)} />
+                    <input type="text" placeholder="Nome..." value={input.nome} name="nome" onChange={handleNomeCognome} />
+                    <input type="text" placeholder="Cognome..." value={input.cognome} name="cognome" onChange={handleNomeCognome} />
                 </div>
                 <div className={styles.inputNumber}>
-                    {inputs.map((e, i) => {
+                    {inputsNum.map((e, i) => {
                         return (
-                            <div className={styles.divInput}>
-                                <input type="number" key={i} className={e.class} id={e.id} placeholder={e.value} />
-                                <input type="text" key={i+i} className={e.classTipo}  placeholder={e.tipo} />
-                                <button key={`key-${i}`} onClick={() => eliminaNumero(e.id)}>X</button>
-                            </div>
+                            <FormInputDelete key={i} i={i} e={e} handleNumChange={handleNumChange} eliminaNumero={eliminaNumero} />
                         )
                     })}
-                    {inputs2.map((input) => <FormInput id={input}/>)}
                 </div>
 
                 <div>
-                    <button onClick={(e) => aggiungiCampo(e)} className={styles.btnAggiung}> + AGGIUNGI NUMERO</button>
+                    <button onClick={aggiungiCampo} className={styles.btnAggiung}> + AGGIUNGI NUMERO</button>
                     <button onClick={() => aggiornaContatto()} className={styles.btnAggiung}>AGGIORNA</button>
                 </div>
+
             </div>
 
 

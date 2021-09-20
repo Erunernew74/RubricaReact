@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'rubrica' 
+    database: 'rubrica'
 })
 
 
@@ -55,7 +55,7 @@ app.post("/inserisciContatto", async (req, res) => {
         } else {
             id = results.insertId
             for (let i = 0; i < req.body.numero.length; i++) {
-                connection.query(`INSERT INTO numeri (id,numero,tipologia,idContatto) VALUES (NULL,'${req.body.numero[i]}','${req.body.tipo[i]}','${id}')`, (err, results, fields) => {
+                connection.query(`INSERT INTO numeri (id,numero,tipologia,idContatto) VALUES (NULL,'${req.body.numero[i].num}','${req.body.numero[i].tipo}','${id}')`, (err, results, fields) => {
                     if (err) {
                         console.log(err)
                         return res.json({ msg: "Inserimento errato!" })
@@ -113,6 +113,7 @@ app.delete("/eliminaNumero", async (req, res) => {
 })
 
 app.post("/inserisciNumero", async (req, res) => {
+    console.log(req.body)
     if (req.body.id) {
         connection.query(`UPDATE numeri SET numero="${req.body.num}" WHERE id=${req.body.id}`, (err, results, fields) => {
             if (err) {
@@ -123,7 +124,7 @@ app.post("/inserisciNumero", async (req, res) => {
         });
     }
     else {
-        connection.query(`INSERT INTO numeri (numero,tipologia, idContatto) VALUES (${req.body.num},${req.body.tipo},${req.body.idContatto})`, (err, results, fields) => {
+        connection.query(`INSERT INTO numeri (numero,tipologia, idContatto) VALUES ("${req.body.num}","${req.body.tipo}",${req.body.idContatto})`, (err, results, fields) => {
             if (err) {
                 console.log(err)
                 return res.json({ status: false })
@@ -139,7 +140,17 @@ app.post("/inserisciNumero", async (req, res) => {
 })
 
 
+app.post("/aggiornaContatto", async (req, res) => {
+    connection.query(`UPDATE contatti SET Nome="${req.body.nome}", Cognome="${req.body.cognome}" WHERE id=${req.body.id}`, (err, results, fields) => {
+        if (err) {
+            console.log(err)
+            return res.json({ status: false })
+        }
 
+    });
+
+    return res.json({ status: true });
+})
 
 
 
