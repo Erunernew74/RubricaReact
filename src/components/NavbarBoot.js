@@ -26,8 +26,8 @@ function NavbarBoot() {
             <Nav.Link href="/InserisciContatto" id={styles.navLink}>
               Inserisci utente
             </Nav.Link>
-            <Nav.Link href="cercaUtente" id={styles.navLink}>
-              cerca utente
+            <Nav.Link href="/CercaContatto" id={styles.navLink}>
+              Cerca Contatto
             </Nav.Link>
             <Nav.Link href="/ListaContatti" id={styles.navLink}>
               Lista contatti

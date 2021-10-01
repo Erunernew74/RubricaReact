@@ -12,7 +12,6 @@ const ListaContatti = () => {
   const [contatti, setContatti] = useState([]);
   const [conttattiUnici, setContattiUnici] = useState([]);
 
-
   useEffect(() => {
     const getContatti = async () => {
       const res = await fetch("http://localhost:3031/listaContatti");
@@ -23,7 +22,7 @@ const ListaContatti = () => {
       setContattiUnici([...new Map(data.map(item => [item["idContatto"], item])).values()])
 
     };
-    getContatti(); 
+    getContatti();
   }, []);
 
 
@@ -40,7 +39,7 @@ const ListaContatti = () => {
 
       const { status } = await res.json();
       setRisCanc(status);
-    } 
+    }
   }
 
 
@@ -50,12 +49,14 @@ const ListaContatti = () => {
       <EliminaSuccess />
     </div>
   )
+
   if (risUpdate) return <AggiornaContatto contatto={contatto} contatti={contatti} />
 
   if (contatti)
     return (
       <div className={styles.containerTable}>
         <h1>Lista completa dei contatti presenti in Rubrica</h1>
+        <p>Sono presenti {conttattiUnici.length} contatti</p>
         <table className={styles.tabella}>
           <tr className={styles.trTitle}>
             <th id={styles.thNome} className={styles.th}>Nome</th>
@@ -64,7 +65,6 @@ const ListaContatti = () => {
           </tr>
           {conttattiUnici.map((e, index) => {
             return (
-
               <tr key={index}>
                 <td>{e.Nome}</td>
                 <td>{e.Cognome}</td>

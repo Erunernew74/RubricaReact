@@ -6,9 +6,11 @@ import styles from '../styles/AggiornaContatto.module.css';
 
 
 const AggiornaContatto = ({ contatto, contatti }) => {
-    const [input, setInput] = useState({ nome: contatto.Nome, cognome: contatto.Cognome })
+    const [input, setInput] = useState({ 
+        nome: contatto.Nome,  
+        cognome: contatto.Cognome })
     const [inputsNum, setInputsNum] = useState([])
-
+    const [disabled, setDisabled] = useState(true);
     const [goToUpdate, setGoToUpdate] = useState(false);
 
     useEffect(() => {
@@ -24,7 +26,13 @@ const AggiornaContatto = ({ contatto, contatti }) => {
             setInputsNum((prevInputs) => ([...prevInputs, newInput]));
         })
 
-    }, [])
+    }, []) 
+    
+    
+    const handleNomeCognome = (e) => {
+        const { name, value } = e.target;
+        setInput({ ...input, [name]: value })
+    }
 
     const handleNumChange = (e, i) => {
         const { name, value } = e.target;
@@ -34,10 +42,7 @@ const AggiornaContatto = ({ contatto, contatti }) => {
         setInputsNum(newInputsNum);
     }
 
-    const handleNomeCognome = (e) => {
-        const { name, value } = e.target;
-        setInput({ ...input, [name]: value })
-    }
+
 
 
     const aggiungiCampo = () => {
@@ -77,7 +82,9 @@ const AggiornaContatto = ({ contatto, contatti }) => {
                 headers: {
                     "Content-type": "application/json"
                 },
-                body: JSON.stringify({ nome: input.nome, cognome: input.cognome, id: contatto.idContatto })
+                body: JSON.stringify({ nome: input.nome, 
+                                       cognome: input.cognome, 
+                                       id: contatto.idContatto })
             });
             const { status } = await res.json()
             console.log(status)
@@ -111,6 +118,11 @@ const AggiornaContatto = ({ contatto, contatti }) => {
         })
         setGoToUpdate(true);
     }
+
+    const toggleInput = () => {
+        setDisabled(!disabled);
+    }
+
     if (goToUpdate)
         return <UpdateSuccess />
     return (
@@ -119,13 +131,25 @@ const AggiornaContatto = ({ contatto, contatti }) => {
             <div className={styles.container}>
 
                 <div className={styles.inputName}>
-                    <input type="text" placeholder="Nome..." value={input.nome} name="nome" onChange={handleNomeCognome} />
-                    <input type="text" placeholder="Cognome..." value={input.cognome} name="cognome" onChange={handleNomeCognome} />
+                    <input 
+                        type="text" 
+                        placeholder="Nome..." 
+                        value={input.nome} 
+                        name="nome" 
+                        onChange={handleNomeCognome} 
+                        disabled={disabled} />
+                    <input t
+                        ype="text" 
+                        placeholder="Cognome..." 
+                        value={input.cognome} 
+                        name="cognome" 
+                        onChange={handleNomeCognome} 
+                        disabled={disabled} />
                 </div>
                 <div className={styles.inputNumber}>
                     {inputsNum.map((e, i) => {
                         return (
-                            <FormInputDelete key={i} i={i} e={e} handleNumChange={handleNumChange} eliminaNumero={eliminaNumero} />
+                            <FormInputDelete key={i} i={i} e={e} handleNumChange={handleNumChange} eliminaNumero={eliminaNumero} disabled={disabled} />
                         )
                     })}
                 </div>
@@ -133,13 +157,12 @@ const AggiornaContatto = ({ contatto, contatti }) => {
                 <div>
                     <button onClick={aggiungiCampo} className={styles.btnAggiung}> + AGGIUNGI NUMERO</button>
                     <button onClick={() => aggiornaContatto()} className={styles.btnAggiung}>AGGIORNA</button>
+                    <button onClick={toggleInput}>SBLOCCA</button>
                 </div>
 
+
+
             </div>
-
-
-
-
         </>
     )
 }
